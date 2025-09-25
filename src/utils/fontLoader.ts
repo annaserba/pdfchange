@@ -1,7 +1,6 @@
 import { PDFDocument } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 import timesNewRomanFont from '../fonts/timesnewromanpsmt.ttf?url';
-import timesNewRomanBoldFont from '../fonts/timesnewromanbold.ttf?url';
 
 // Загрузка локального Times New Roman с поддержкой украинского языка
 export const loadFonts = async (pdfDoc: PDFDocument): Promise<{
@@ -27,21 +26,7 @@ export const loadFonts = async (pdfDoc: PDFDocument): Promise<{
      
       const regularFont = await pdfDoc.embedFont(fontBytes);
       
-      // Загружаем локальный жирный Times New Roman
-      console.log('📁 Загружаем локальный жирный Times New Roman:', timesNewRomanBoldFont);
-      
-      const boldFontResponse = await fetch(timesNewRomanBoldFont);
       let boldFont = null;
-      
-      if (boldFontResponse.ok) {
-        const boldFontBytes = await boldFontResponse.arrayBuffer();
-        console.log(`📁 Загружено ${boldFontBytes.byteLength} байт локального жирного Times New Roman`);
-        
-        boldFont = await pdfDoc.embedFont(boldFontBytes);
-        console.log('✅ Загружен локальный жирный Times New Roman');
-      } else {
-        console.warn('⚠️ Не удалось загрузить локальный жирный шрифт');
-      }
       
       console.log('✅ Успешно загружены локальные Times New Roman шрифты (обычный + жирный)');
       console.log('🔤 Тестируем украинские символы...');
