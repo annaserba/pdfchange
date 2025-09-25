@@ -190,7 +190,7 @@ export const generateReceiptPDF = async (
 
     // Сохраняем отредактированный PDF
     const pdfBytes = await pdfDoc.save();
-    const blob = new Blob([pdfBytes.buffer], { type: 'application/pdf' });
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
 
     const message = 'PDF успішно відредаговано! Виконано точкову заміну тільки змінених полів у їх оригінальних позиціях зі збереженням всіх печаток, QR-кодів та підписів.';
 
