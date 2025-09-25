@@ -14,4 +14,5 @@ export interface PaymentData {
   paymentPurpose: string;
   amount: string;
   commissionAmount: string;
+  paidAmount: string;
 }

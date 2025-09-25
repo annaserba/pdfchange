@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Comparison Report - content-comparison</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        .pdf-section {
+            text-align: center;
+        }
+        .pdf-section h2 {
+            margin: 0 0 20px 0;
+            font-size: 1.5em;
+        }
+        .pdf-section.before h2 {
+            color: #e74c3c;
+        }
+        .pdf-section.after h2 {
+            color: #27ae60;
+        }
+        .pdf-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border: 3px solid #ecf0f1;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .analysis {
+            padding: 30px;
+            background: #f8f9fa;
+            margin: 0;
+        }
+        .analysis h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .changes-list {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        .change-item {
+            padding: 5px 0;
+            font-family: monospace;
+        }
+        .change-item.added {
+            color: #27ae60;
+        }
+        .change-item.removed {
+            color: #e74c3c;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+        .stat-card h4 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+        .stat-card p {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #3498db;
+        }
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 PDF Comparison Report</h1>
+            <p>Тест: content-comparison</p>
+            <p>Дата: 25.09.2025, 23:10:21</p>
+        </div>
+        
+        <div class="comparison-grid">
+            <div class="pdf-section before">
+                <h2>🔴 До изменений</h2>
+                <img src="file:///Users/serba/Documents/pdfchange/e2e/screenshots/content-comparison-before-1758831011492.png" alt="PDF до изменений" class="pdf-image">
+                <p>Файл: real-receipt.pdf</p>
+                <p>Размер: 484 KB</p>
+            </div>
+            <div class="pdf-section after">
+                <h2>🟢 После изменений</h2>
+                <img src="file:///Users/serba/Documents/pdfchange/e2e/screenshots/content-comparison-after-1758831011492.png" alt="PDF после изменений" class="pdf-image">
+                <p>Файл: content-test-1758831011468.pdf</p>
+                <p>Размер: 678 KB</p>
+            </div>
+        </div>
+        
+        <div class="analysis">
+            <h3>📝 Анализ изменений</h3>
+            <p><strong>Статус:</strong> Изменений не обнаружено</p>
+            
+            <p>Текстовых изменений не обнаружено</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <h4>📄 Исходный PDF</h4>
+                <p>484 KB</p>
+            </div>
+            <div class="stat-card">
+                <h4>📄 Измененный PDF</h4>
+                <p>678 KB</p>
+            </div>
+            <div class="stat-card">
+                <h4>🔄 Изменения</h4>
+                <p>0</p>
+            </div>
+            <div class="stat-card">
+                <h4>📸 Скриншоты</h4>
+                <p>✅ Созданы</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

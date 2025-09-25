@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Editor Screenshots Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        .gallery {
+            padding: 40px;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        .screenshot-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .screenshot-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        .screenshot-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-bottom: 3px solid #3498db;
+        }
+        .screenshot-info {
+            padding: 20px;
+        }
+        .screenshot-info h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        .screenshot-info p {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        .stats {
+            background: #ecf0f1;
+            padding: 30px;
+            text-align: center;
+        }
+        .stats h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .stat-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+        .stat-item h4 {
+            color: #3498db;
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+        .stat-item p {
+            color: #7f8c8d;
+        }
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📸 PDF Editor Screenshots</h1>
+            <p>Галерея скриншотов процесса редактирования PDF документов</p>
+            <p>Создано: 25.09.2025, 23:00:46</p>
+        </div>
+        
+        <div class="gallery">
+            <div class="gallery-grid">
+                
+                    <div class="screenshot-card">
+                        <img src="file:///Users/serba/Documents/pdfchange/e2e/screenshots/gallery-empty-1758830443102.png" alt="Пустая форма">
+                        <div class="screenshot-info">
+                            <h3>Пустая форма</h3>
+                            <p>Файл: gallery-empty-1758830443102.png</p>
+                            <p>Размер: 108 KB</p>
+                        </div>
+                    </div>
+                
+                    <div class="screenshot-card">
+                        <img src="file:///Users/serba/Documents/pdfchange/e2e/screenshots/gallery-loaded-1758830443102.png" alt="После загрузки PDF">
+                        <div class="screenshot-info">
+                            <h3>После загрузки PDF</h3>
+                            <p>Файл: gallery-loaded-1758830443102.png</p>
+                            <p>Размер: 123 KB</p>
+                        </div>
+                    </div>
+                
+                    <div class="screenshot-card">
+                        <img src="file:///Users/serba/Documents/pdfchange/e2e/screenshots/gallery-edited-1758830443102.png" alt="После редактирования">
+                        <div class="screenshot-info">
+                            <h3>После редактирования</h3>
+                            <p>Файл: gallery-edited-1758830443102.png</p>
+                            <p>Размер: 121 KB</p>
+                        </div>
+                    </div>
+                
+            </div>
+        </div>
+        
+        <div class="stats">
+            <h2>📊 Статистика</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h4>3</h4>
+                    <p>Скриншотов создано</p>
+                </div>
+                <div class="stat-item">
+                    <h4>352 KB</h4>
+                    <p>Общий размер</p>
+                </div>
+                <div class="stat-item">
+                    <h4>25.09.2025</h4>
+                    <p>Дата создания</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

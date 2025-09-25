@@ -10,3 +10,5 @@ export { generateReceiptPDF } from './components/PDFGenerator';
 export { downloadPDF } from './utils/pdfUtils';
 export { parseReceiptText } from './utils/textParser';
 export { extractDataWithPositionsFromPDF, extractDataFromPDF } from './utils/pdfExtractor';
+export { splitTextIntoBlocks, splitLabelAndValue, calculateBlocksHeight } from './utils/textSplitter';
+export type { TextBlock } from './utils/textSplitter';
