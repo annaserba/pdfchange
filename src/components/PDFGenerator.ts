@@ -37,7 +37,7 @@ export const generateReceiptPDF = async (
     console.log('Существующий PDF успешно загружен для редактирования');
     
     // Извлекаем шрифты из загруженного PDF
-    const { font } = await loadFonts(pdfDoc);
+    const { font, boldFont } = await loadFonts(pdfDoc);
     console.log('Загружены шрифты с поддержкой украинского языка (обычный + жирный)');
     
     // Получаем первую страницу или создаем новую
@@ -77,6 +77,10 @@ export const generateReceiptPDF = async (
         originalDataWithPositions.forEach(({ field, value: originalValue, x, y, width, height }) => {
           const fieldKey = field as keyof PaymentData;
           const newValue = formData[fieldKey];
+
+          if(fieldKey === 'amount' || fieldKey === 'commissionAmount') {
+            return;
+          }
           
           // ЗАМЕНЯЕМ ВСЕ ЗНАЧЕНИЯ независимо от изменений:
           // 1. Должно быть новое значение
@@ -93,29 +97,121 @@ export const generateReceiptPDF = async (
             
             replacementCount++;
             
+            // Ищем координату заголовка для этого поля
+            const labelField = `${field}_label`;
+            const labelData = originalDataWithPositions.find(item => item.field === labelField);
+            const labelX = labelData ? labelData.x : x; // Используем x заголовка или текущую позицию как fallback
             
-            // Добавляем новый текст
-            console.log(`📝 Отображаем значение: "${newValue}" в позиции (${x}, ${y})`);
+            if (labelData) {
+              console.log(`📍 Найден заголовок для ${field}: "${labelData.value}" в позиции (${labelData.x}, ${labelData.y})`);
+            } else {
+              console.log(`⚠️ Заголовок для ${field} не найден, используем текущую позицию`);
+            }
             
-            if (newValue) {
-              drawUkrainianText(page, newValue, {
-                x: x,
-                y: y,
-                size: 10,
-                color: rgb(0, 0, 0)
-              }, font);
-              
-              console.log(`✅ Текст отображен: "${newValue}"`);
+            // Проверяем, нужно ли отображать жирным шрифтом
+            const boldFields = ['amount', 'commissionAmount'];
+            const shouldUseBold = boldFields.includes(field);
+            
+            if (shouldUseBold) {
+              console.log(`💰 ОТОБРАЖАЕМ СУММУ жирным шрифтом: поле ${field} = "${newValue}" в позиции (${x}, ${y}), labelX: ${labelX}`);
+            } else {
+              console.log(`📝 Отображаем значение: "${newValue}" в позиции (${x}, ${y}), labelX: ${labelX}`);
             }
-          } else {
-            // Логируем причину пропуска
-            if (!hasNewValue) {
-              console.log(`❌ Пропускаем поле ${field} - нет нового значения`);
-            } else if (!hasOriginalValue) {
-              console.log(`❌ Пропускаем поле ${field} - не найдено в оригинальном PDF`);
+            
+              if (shouldUseBold) {
+                // Используем жирный шрифт для сумм
+                console.log(`🔥 Используем жирный шрифт для суммы ${field}: "${newValue}"`);
+                drawUkrainianText(page, newValue, {
+                  x: x,
+                  y: y,
+                  size: 8,
+                  color: rgb(0, 0, 0),
+                  letterSpacing: -0.2
+                }, boldFont, labelX);
+                
+                console.log(`✅ СУММА отображена жирным шрифтом: "${newValue}"`);
+              } else {
+                // Обычный шрифт для остальных полей
+                drawUkrainianText(page, newValue, {
+                  x: x,
+                  y: y,
+                  size: 8,
+                  color: rgb(0, 0, 0),
+                  letterSpacing: -0.2
+                }, font, labelX);
+                
+                console.log(`✅ Текст отображен: "${newValue}"`);
+              }
             }
-          }
         });
+        
+        // Специальная обработка для поля "amount" - отображаем под "Призначення платежу"
+        if (formData.amount && formData.amount.trim()) {
+          console.log(`💰 Специальная обработка поля amount: "${formData.amount}"`);
+          
+          // Находим позицию поля "Призначення платежу" (значение, не заголовок)
+          const paymentPurposeData = originalDataWithPositions.find(item => item.field === 'paymentPurpose');
+          
+          if (paymentPurposeData) {
+            // Рассчитываем количество строк в paymentPurpose
+            const paymentPurposeLines = formData.paymentPurpose ? formData.paymentPurpose.split('\n').length : 1;
+            const lineHeight = 12; // Высота одной строки
+            
+            // Размещаем под полем "Призначення платежу" с учетом количества строк
+            const amountX = paymentPurposeData.x; // Та же x координата
+            const amountY = paymentPurposeData.y - (paymentPurposeLines * lineHeight + 2.5); // Учитываем высоту текста + отступ
+            
+            console.log(`📍 Отображаем "Сума" в позиции (${amountX}, ${amountY}) - под полем "Призначення платежу" (${paymentPurposeLines} строк)`);
+            
+            // Отображаем "Сума: [значение]" жирным шрифтом
+            const amountText = `Сума: ${formData.amount}`;
+            drawUkrainianText(page, amountText, {
+              x: amountX,
+              y: amountY,
+              size: 8,
+              color: rgb(0, 0, 0),
+              letterSpacing: -0.2
+            }, boldFont);
+            
+            console.log(`✅ Поле "Сума" отображено жирным шрифтом: "${amountText}"`);
+          } else {
+            console.log(`⚠️ Не найдено поле "Призначення платежу" для размещения "Сума"`);
+          }
+        }
+        
+        // Специальная обработка для поля "commissionAmount" - отображаем под "amount"
+        if (formData.commissionAmount && formData.commissionAmount.trim()) {
+          console.log(`💰 Специальная обработка поля commissionAmount: "${formData.commissionAmount}"`);
+          
+          // Находим позицию поля "Призначення платежу" для расчета позиции
+          const paymentPurposeData = originalDataWithPositions.find(item => item.field === 'paymentPurpose');
+          
+          if (paymentPurposeData) {
+            // Рассчитываем количество строк в paymentPurpose
+            const paymentPurposeLines = formData.paymentPurpose ? formData.paymentPurpose.split('\n').length : 1;
+            const lineHeight = 12; // Высота одной строки
+            
+            // Размещаем под полем "amount" (еще ниже на высоту одной строки)
+            const commissionX = paymentPurposeData.x; // Та же x координата
+            const commissionY = paymentPurposeData.y - (paymentPurposeLines * lineHeight + lineHeight + 5); // Учитываем высоту paymentPurpose + высоту amount + отступ
+            
+            console.log(`📍 Отображаем "Сума комісії" в позиции (${commissionX}, ${commissionY}) - под полем "Сума" (${paymentPurposeLines} строк в призначенні)`);
+            
+            // Отображаем "Сума комісії: [значение]" жирным шрифтом
+            const commissionText = `Сума комісії: ${formData.commissionAmount}`;
+            drawUkrainianText(page, commissionText, {
+              x: commissionX,
+              y: commissionY,
+              size: 8,
+              color: rgb(0, 0, 0),
+              letterSpacing: -0.2
+            }, boldFont);
+            
+            console.log(`✅ Поле "Сума комісії" отображено жирным шрифтом: "${commissionText}"`);
+          } else {
+            console.log(`⚠️ Не найдено поле "Призначення платежу" для размещения "Сума комісії"`);
+          }
+        }
         
         console.log(`🎯 Умная замена завершена. Заменено полей: ${replacementCount} из ${originalDataWithPositions.length} найденных`);
         

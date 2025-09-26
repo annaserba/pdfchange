@@ -5,4 +5,4 @@ export * from './pdfGenerator';
 
 // Дополнительные экспорты для прямого доступа к компонентам
 export { loadFonts } from './utils/fontLoader';
-export { drawUkrainianText, drawBoldUkrainianText, safeDrawText } from './utils/textRenderer';
+export { drawUkrainianText, safeDrawText } from './utils/textRenderer';

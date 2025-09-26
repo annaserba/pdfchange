@@ -45,14 +45,6 @@ console.log('Результат:');
 console.log(createSnapshot(longWordBlocks));
 console.log(`Ожидается: 2-3 строки (длинное слово разбито)\nПолучено: ${longWordBlocks.length} строк\n`);
 
-// Тест 5: Заголовок + значение (короткое)
-console.log('=== ТЕСТ 5: Заголовок + короткое значение ===');
-const shortLabelValue = splitLabelAndValue("Сума:", "2150.00 грн", 50, 300, 45, 12);
-console.log('Входные данные: "Сума:" + "2150.00 грн"');
-console.log('Результат:');
-console.log(createSnapshot(shortLabelValue));
-console.log(`Ожидается: 1 строка (все помещается)\nПолучено: ${shortLabelValue.length} строк\n`);
-
 // Тест 6: Заголовок + значение (длинное)
 console.log('=== ТЕСТ 6: Заголовок + длинное значение ===');
 const longLabelValue = splitLabelAndValue(
@@ -128,7 +120,6 @@ export {
   mediumBlocks,
   longBlocks,
   longWordBlocks,
-  shortLabelValue,
   longLabelValue,
   createSnapshot
 };

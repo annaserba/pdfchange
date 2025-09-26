@@ -12,7 +12,7 @@ export interface PaymentData {
   edrpouRecipient: string;
   recipientAccount: string;
   paymentPurpose: string;
-  amount: string;
-  commissionAmount: string;
   paidAmount: string;
+  amount: string;        // Сума
+  commissionAmount: string; // Сума комісії
 }

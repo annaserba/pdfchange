@@ -79,6 +79,7 @@ const initialData: PaymentData = {
   edrpouRecipient: '',
   recipientAccount: '',
   paymentPurpose: '',
+  paidAmount: '',
   amount: '',
   commissionAmount: ''
 };
@@ -89,6 +90,50 @@ function App() {
   const [formData, setFormData] = useState<PaymentData>(initialData);
   const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Універсальна функція для форматировання тексту з переносами строк (максимум 2 строки)
+  const formatTextWithLineBreaks = (text: string, firstLineLimit: number, secondLineLimit: number = 56): string => {
+    if (!text) return '';
+    
+    const words = text.split(' ');
+    const lines: string[] = [];
+    let currentLine = '';
+    
+    words.forEach(word => {
+      // Ограничиваем тільки двома строками
+      if (lines.length >= 2) {
+        return; // Прекращаємо обробку, якщо вже є 2 строки
+      }
+      
+      // Визначаємо ліміт для поточної строки
+      const currentMaxLength = lines.length === 0 ? firstLineLimit : secondLineLimit;
+      
+      // Якщо додавання слова не перевищує ліміт
+      if ((currentLine + ' ' + word).trim().length <= currentMaxLength) {
+        currentLine = currentLine ? currentLine + ' ' + word : word;
+      } else {
+        // Если текущая строка не пустая, добавляем её в массив
+        if (currentLine) {
+          lines.push(currentLine);
+        }
+        
+        // Если уже есть 2 строки, прекращаем
+        if (lines.length >= 2) {
+          return;
+        }
+        
+        // Начинаем новую строку с текущего слова
+        currentLine = word;
+      }
+    });
+    
+    // Добавляем последнюю строку, если она не пустая и у нас меньше 2 строк
+    if (currentLine && lines.length < 2) {
+      lines.push(currentLine);
+    }
+    
+    return lines.join('\n');
+  };
 
   const handleFileUpload = async (file: File) => {
     if (file.type !== 'application/pdf') {
@@ -120,10 +165,14 @@ function App() {
       
       const extractedData = await extractDataFromPDF(bytesCopy);
       
-      // Обновляем форму извлеченными данными
+      // Обновляем форму извлеченными данными с форматированием поля "Одержувач"
       setFormData(prevData => ({
         ...prevData,
-        ...extractedData
+        ...extractedData,
+        // Форматируем поля с переносами строк
+        recipient: extractedData.recipient ? formatTextWithLineBreaks(extractedData.recipient, 45) : prevData.recipient,
+        recipientBank: extractedData.recipientBank ? formatTextWithLineBreaks(extractedData.recipientBank, 28) : prevData.recipientBank,
+        paymentPurpose: extractedData.paymentPurpose ? formatTextWithLineBreaks(extractedData.paymentPurpose, 56) : prevData.paymentPurpose
       }));
       
       const extractedFieldsCount = Object.keys(extractedData).length;
@@ -292,8 +341,8 @@ function App() {
           <label>Сплачено:</label>
           <input
             type="text"
-            value={formData.paymentDate}
-            onChange={(e) => handleInputChange('paymentDate', e.target.value)}
+            value={formData.paidAmount}
+            onChange={(e) => handleInputChange('paidAmount', e.target.value)}
           />
         </div>
 
@@ -305,6 +354,8 @@ function App() {
             onChange={(e) => handleInputChange('valueDate', e.target.value)}
           />
         </div>
+
+       
 
         <div className="form-group">
           <label>Рахунок відправника:</label>
@@ -320,6 +371,9 @@ function App() {
           <textarea
             value={formData.recipient}
             onChange={(e) => handleInputChange('recipient', e.target.value)}
+            rows={2}
+            style={{ fontFamily: 'monospace', fontSize: '14px' }}
+            placeholder="Введіть дані одержувача (максимум 2 рядки: 1-й - 45 символів, 2-й - 56 символів)"
           />
         </div>
 
@@ -328,6 +382,9 @@ function App() {
           <textarea
             value={formData.recipientBank}
             onChange={(e) => handleInputChange('recipientBank', e.target.value)}
+            rows={2}
+            style={{ fontFamily: 'monospace', fontSize: '14px' }}
+            placeholder="Введіть дані банку одержувача (максимум 2 рядки: 1-й - 28 символів, 2-й - 56 символів)"
           />
         </div>
 
@@ -354,6 +411,9 @@ function App() {
           <textarea
             value={formData.paymentPurpose}
             onChange={(e) => handleInputChange('paymentPurpose', e.target.value)}
+            rows={2}
+            style={{ fontFamily: 'monospace', fontSize: '14px' }}
+            placeholder="Введіть призначення платежу (максимум 2 рядки: 1-й - 22 символи, 2-й - 56 символів)"
           />
         </div>
 
@@ -363,6 +423,7 @@ function App() {
             type="text"
             value={formData.amount}
             onChange={(e) => handleInputChange('amount', e.target.value)}
+            placeholder="2150.00"
           />
         </div>
 
@@ -372,8 +433,10 @@ function App() {
             type="text"
             value={formData.commissionAmount}
             onChange={(e) => handleInputChange('commissionAmount', e.target.value)}
+            placeholder="0.00"
           />
         </div>
+
       </div>
 
       <div className="download-section">
